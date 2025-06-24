@@ -6,11 +6,17 @@ from pathlib import Path
 from typing import Optional, Any
 import streamlit as st
 from datetime import datetime
+import shutil
 
 def check_dependency(package_name: str) -> bool:
     """Memeriksa apakah sebuah library Python terpasang."""
     import importlib.util
     return importlib.util.find_spec(package_name) is not None
+
+
+def check_poppler_installation() -> bool:
+    """Memeriksa ketersediaan utilitas Poppler `pdftoppm`."""
+    return shutil.which("pdftoppm") is not None
 
 def create_docx_report_robust(result: Any, output_path: Path) -> Optional[Path]:
     """
@@ -113,6 +119,11 @@ def create_docx_report_robust(result: Any, output_path: Path) -> Optional[Path]:
         import traceback
         traceback.print_exc()
         return None
+
+
+def create_docx_backend(result: Any, output_path: Path) -> Optional[Path]:
+    """Wrapper kompatibilitas untuk pembuatan laporan DOCX."""
+    return create_docx_report_robust(result, output_path)
 
 
 def add_export_buttons(pdf_path: Path, result: Any, col1, col2, col3):
